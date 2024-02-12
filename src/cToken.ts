@@ -20,6 +20,55 @@ import { CallOptions, TrxResponse } from "./types";
 import { getNetNameWithChainId } from "./util";
 
 /**
+ * Retrieves the borrow balance of a user for a specific asset.
+ *
+ * @param asset - The asset symbol.
+ * @param userAddress - The user's Ethereum address.
+ * @param options - Additional options for the function call.
+ * @returns A Promise that resolves to the borrow balance as a BigNumber or number.
+ * @throws Throws an error if the asset cannot be borrowed or if the userAddress is not a valid Ethereum address.
+ */
+export async function getUserBorrows(
+	asset: string,
+	userAddress: string,
+	options: CallOptions = {}
+): Promise<BigNumber | number> {
+	await netId(this);
+	const errorPrefix = "Compound [getUserBorrows] | ";
+
+	const cTokenName = "c" + asset;
+	const cTokenAddress =
+		address[getNetNameWithChainId(this._network.id)][cTokenName];
+
+	if (!cTokenAddress || !underlyings.includes(asset)) {
+		throw Error(errorPrefix + "Argument `asset` cannot be borrowed.");
+	}
+
+	if (!ethers.utils.isAddress(userAddress)) {
+		throw Error(
+			errorPrefix + "Argument `userAddress` must be a valid Ethereum address."
+		);
+	}
+
+	options.abi = abi.cErc20;
+
+	const trxOptions: CallOptions = {
+		...options,
+		_compoundProvider: this._provider,
+	};
+
+	const parameters = [userAddress];
+	const method = "borrowBalanceStored";
+
+	const result = await eth.read(cTokenAddress, method, parameters, trxOptions);
+
+	if (options.mantissa) {
+		return result._hex;
+	}
+	return Number(result._hex) / Math.pow(10, decimals[asset]);
+}
+
+/**
  * Supplies the user's Ethereum asset to the Compound Protocol.
  *
  * @param {string} asset A string of the asset to supply.
@@ -56,7 +105,6 @@ import { getNetNameWithChainId } from "./util";
 export async function supply(
 	asset: string,
 	amount: string | number | BigNumber,
-	noApprove = false,
 	options: CallOptions = {}
 ): Promise<TrxResponse> {
 	await netId(this);
@@ -81,9 +129,15 @@ export async function supply(
 		);
 	}
 
+	let userAddress = this._provider.address;
+
+	if (!userAddress && this._provider.getAddress) {
+		userAddress = await this._provider.getAddress();
+	}
+
 	if (!options.mantissa) {
-		amount = +amount;
-		amount = amount * Math.pow(10, decimals[asset]);
+		amount = amount.toString();
+		amount = ethers.utils.parseUnits(amount, decimals[asset]);
 	}
 
 	amount = ethers.BigNumber.from(amount.toString());
@@ -96,19 +150,19 @@ export async function supply(
 
 	options._compoundProvider = this._provider;
 
-	if (
-		cTokenName !== constants.cETH &&
-		cTokenName !== constants.cRBTC &&
-		noApprove !== true
-	) {
+	const borrowBalance = await eth.read(
+		cTokenAddress,
+		"borrowBalanceStored",
+		[userAddress],
+		options
+	);
+
+	if (borrowBalance.gt(0))
+		throw Error(errorPrefix + "User has outstanding borrows");
+
+	if (cTokenName !== constants.cETH && cTokenName !== constants.cRBTC) {
 		const underlyingAddress =
 			address[getNetNameWithChainId(this._network.id)][asset];
-		let userAddress = this._provider.address;
-
-		if (!userAddress && this._provider.getAddress) {
-			userAddress = await this._provider.getAddress();
-		}
-
 		// Check allowance
 		const allowance = await eth.read(
 			underlyingAddress,
@@ -121,7 +175,7 @@ export async function supply(
 
 		if (notEnough) {
 			// ERC-20 approve transaction
-			await eth.trx(
+			return await eth.trx(
 				underlyingAddress,
 				"approve",
 				[cTokenAddress, amount],
@@ -184,7 +238,8 @@ export async function redeem(
 	const assetIsCToken = asset[0] === "c";
 
 	const cTokenName = assetIsCToken ? asset : "c" + asset;
-	const cTokenAddress = address[this._network.name][cTokenName];
+	const cTokenAddress =
+		address[getNetNameWithChainId(this._network.id)][cTokenName];
 
 	const underlyingName = assetIsCToken ? asset.slice(1, asset.length) : asset;
 
@@ -203,8 +258,8 @@ export async function redeem(
 	}
 
 	if (!options.mantissa) {
-		amount = +amount;
-		amount = amount * Math.pow(10, decimals[asset]);
+		amount = amount.toString();
+		amount = ethers.utils.parseUnits(amount, decimals[asset]);
 	}
 
 	amount = ethers.BigNumber.from(amount.toString());
@@ -215,7 +270,34 @@ export async function redeem(
 		abi: cTokenName === constants.cETH ? abi.cEther : abi.cErc20,
 	};
 	const parameters = [amount];
-	const method = assetIsCToken ? "redeem" : "redeemUnderlying";
+	let method;
+	let userAddress = this._provider.address;
+
+	if (!userAddress && this._provider.getAddress) {
+		userAddress = await this._provider.getAddress();
+	}
+	if (assetIsCToken) {
+		// CHeck balance of cToken
+		method = "redeem";
+		const cTokenBalance = await eth.read(
+			cTokenAddress,
+			"balanceOf",
+			[userAddress],
+			trxOptions
+		);
+		if (amount.gt(cTokenBalance))
+			throw Error(errorPrefix + "Trying to redeem more than supplied");
+	} else {
+		method = "redeemUnderlying";
+		const underlyingBalance = await eth.read(
+			cTokenAddress,
+			"balanceOfUnderlying",
+			[userAddress],
+			trxOptions
+		);
+		if (amount.gt(underlyingBalance))
+			throw Error(errorPrefix + "Trying to redeem more than supplied");
+	}
 
 	return eth.trx(cTokenAddress, method, parameters, trxOptions);
 }
@@ -264,7 +346,8 @@ export async function borrow(
 	const errorPrefix = "Compound [borrow] | ";
 
 	const cTokenName = "c" + asset;
-	const cTokenAddress = address[this._network.name][cTokenName];
+	const cTokenAddress =
+		address[getNetNameWithChainId(this._network.id)][cTokenName];
 
 	if (!cTokenAddress || !underlyings.includes(asset)) {
 		throw Error(errorPrefix + "Argument `asset` cannot be borrowed.");
@@ -281,11 +364,37 @@ export async function borrow(
 	}
 
 	if (!options.mantissa) {
-		amount = +amount;
-		amount = amount * Math.pow(10, decimals[asset]);
+		amount = amount.toString();
+		amount = ethers.utils.parseUnits(amount, decimals[asset]);
 	}
 
 	amount = ethers.BigNumber.from(amount.toString());
+
+	let userAddress = this._provider.address;
+
+	if (!userAddress && this._provider.getAddress) {
+		userAddress = await this._provider.getAddress();
+	}
+
+	const comptrollerAddress =
+		address[getNetNameWithChainId(this._network.id)].Comptroller;
+
+	const compCallOptions: CallOptions = {
+		_compoundProvider: this._provider,
+		abi: abi.Comptroller,
+		...options,
+	};
+
+	const accountLiquidity = await eth.read(
+		comptrollerAddress,
+		"getAccountLiquidity",
+		[userAddress],
+		compCallOptions
+	);
+	if (accountLiquidity[2].gt(0))
+		throw Error(errorPrefix + "User is in liquidation zone");
+	if (accountLiquidity[1].lt(amount))
+		throw Error(errorPrefix + "Insufficient collateral");
 
 	const trxOptions: CallOptions = {
 		...options,
@@ -306,7 +415,7 @@ export async function borrow(
  * @param {number | string | BigNumber} amount A string, number, or BigNumber
  *     object of the amount of an asset to borrow. Use the `mantissa` boolean in
  *     the `options` parameter to indicate if this value is scaled up (so there
- *     are no decimals) or in its natural scale.
+ *     are no decimals) or in its natural scale. If the number is -1 it will repay all the borrow.
  * @param {string | null} [borrower] The Ethereum address of the borrower to
  *     repay an open borrow for. Set this to `null` if the user is repaying
  *     their own borrow.
@@ -336,18 +445,20 @@ export async function borrow(
  * })().catch(console.error);
  * ```
  */
+
+//TODO: FIX REPAYALL
 export async function repayBorrow(
 	asset: string,
 	amount: string | number | BigNumber,
 	borrower: string,
-	noApprove = false,
 	options: CallOptions = {}
 ): Promise<TrxResponse> {
 	await netId(this);
 	const errorPrefix = "Compound [repayBorrow] | ";
 
 	const cTokenName = "c" + asset;
-	const cTokenAddress = address[this._network.name][cTokenName];
+	const cTokenAddress =
+		address[getNetNameWithChainId(this._network.id)][cTokenName];
 
 	if (!cTokenAddress || !underlyings.includes(asset)) {
 		throw Error(errorPrefix + "Argument `asset` is not supported.");
@@ -370,32 +481,50 @@ export async function repayBorrow(
 		throw Error(errorPrefix + "Invalid `borrower` address.");
 	}
 
-	if (!options.mantissa) {
-		amount = +amount;
-		amount = amount * Math.pow(10, decimals[asset]);
+	let userAddress = this._provider.address;
+
+	if (!userAddress && this._provider.getAddress) {
+		userAddress = await this._provider.getAddress();
 	}
 
-	amount = ethers.BigNumber.from(amount.toString());
+	const inputAmount = amount;
 
+	if (!options.mantissa) {
+		amount = amount.toString();
+		amount = ethers.utils.parseUnits(amount, decimals[asset]);
+	}
+	amount = ethers.BigNumber.from(amount.toString());
 	const trxOptions: CallOptions = {
 		...options,
 		_compoundProvider: this._provider,
+		abi: abi.cErc20,
 	};
 
+	const borrowBalance = await eth.read(
+		cTokenAddress,
+		"borrowBalanceStored",
+		[userAddress],
+		trxOptions
+	);
+
+	let approvalValue = amount;
+
+	if (inputAmount.toString() === "-1") {
+		amount = ethers.constants.MaxUint256;
+		approvalValue = borrowBalance.add(1);
+	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const parameters: any[] = method === "repayBorrowBehalf" ? [borrower] : [];
-	if (cTokenName === constants.cETH) {
+	if (cTokenName === constants.cETH || cTokenName === constants.cRBTC) {
 		trxOptions.value = amount;
 		trxOptions.abi = abi.cEther;
 	} else {
 		parameters.push(amount);
-		trxOptions.abi = abi.cErc20;
 	}
 
-	if (cTokenName !== constants.cETH && noApprove !== true) {
-		const underlyingAddress = address[this._network.name][asset];
-		const userAddress = this._provider.address;
-
+	if (cTokenName !== constants.cETH && cTokenName !== constants.cRBTC) {
+		const underlyingAddress =
+			address[getNetNameWithChainId(this._network.id)][asset];
 		// Check allowance
 		const allowance = await eth.read(
 			underlyingAddress,
@@ -404,14 +533,14 @@ export async function repayBorrow(
 			trxOptions
 		);
 
-		const notEnough = allowance.lt(amount);
+		const notEnough = allowance.lt(approvalValue);
 
 		if (notEnough) {
 			// ERC-20 approve transaction
-			await eth.trx(
+			return await eth.trx(
 				underlyingAddress,
 				"approve",
-				[cTokenAddress, amount],
+				[cTokenAddress, approvalValue],
 				trxOptions
 			);
 		}
