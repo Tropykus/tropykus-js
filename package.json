@@ -1,8 +1,8 @@
 {
-	"name": "@compound-finance/compound-js",
+	"name": "@tropykus/tropykus-js",
 	"version": "0.4.5",
-	"author": "Compound Labs, Inc.",
-	"description": "A JavaScript SDK for Ethereum and the Compound Protocol.",
+	"author": "Tropykus Finance",
+	"description": "A JavaScript SDK for RSK and the Tropykus Protocol.",
 	"license": "BSD-3-Clause",
 	"main": "dist/nodejs/index.js",
 	"files": [
@@ -31,13 +31,13 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/compound-finance/compound-js.git"
+		"url": "https://github.com/tropykus/tropykus-js.git"
 	},
 	"keywords": [
-		"compound",
-		"compound.js",
-		"compound finance",
-		"compound protocol",
+		"tropykus",
+		"tropykus.js",
+		"tropykus finance",
+		"tropykus protocol",
 		"decentralized finance",
 		"defi",
 		"ethereum"

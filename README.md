@@ -100,7 +100,7 @@ See the docblock comments above each function definition or the official [Tropyk
 
 ## Instance Creation
 
-The following are valid Ethereum providers for initialization of the SDK.
+The following are valid Ethereum providers for initialization of the SDK (v2 and Comet instance).
 
 ```js
 var tropykus = new Tropykus(window.ethereum); // web browser
@@ -120,6 +120,15 @@ var tropykus = new Tropykus('https://public-node.rsk.co', {
 var tropykus = new Tropykus('https://public-node.rsk.co' {
   mnemonic: 'clutch captain shoe...', // preferably with environment variable
 });
+```
+
+### Comet
+
+Compound III (Comet) object initialization. The constructor accepts the same parameters as the `Compound` constructor. An error will be thrown initially and whenever a method is called if the provider does not match the network of the specific Comet deployment. The SDK constants as well as a method in the Comet documentation note the Comet deployments that Compound.js supports.
+
+```js
+var compound = new Compound(window.ethereum);
+var comet = compound.comet.MAINNET_USDC(); // provider from `compound` will be used unless on is explicitly passed
 ```
 
 ## Constants and Contract Addresses

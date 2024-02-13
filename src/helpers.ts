@@ -1,4 +1,5 @@
-import { CompoundInstance } from './types';
+import { ethers } from 'ethers';
+import { CompoundInstance, CometInstance } from './types';
 
 /**
  * This function acts like a decorator for all methods that interact with the
@@ -9,11 +10,44 @@ import { CompoundInstance } from './types';
  *
  * @hidden
  *
- * @param {Compound} _compound The instance of the Compound.js SDK.
+ * @param {Compound | Comet} instance The Compound (v2) or Comet instance of the SDK.
  *
  */
-export async function netId(_compound: CompoundInstance): Promise<void> {
-  if (_compound._networkPromise) {
-    await _compound._networkPromise;
+export async function netId(instance: CompoundInstance | CometInstance): Promise<void> {
+  if (instance._networkPromise) {
+    await instance._networkPromise;
   }
+}
+
+const keccak256 = ethers.utils.keccak256;
+
+/**
+ * Applies the EIP-55 checksum to an Ethereum address.
+ *
+ * @hidden
+ *
+ * @param {string} _address The Ethereum address to apply the checksum.
+ *
+ * @returns {string} Returns a string of the Ethereum address.
+ */
+export function toChecksumAddress(_address: string): string {
+  const chars = _address.toLowerCase().substring(2).split('');
+  const expanded = new Uint8Array(40);
+
+  for (let i = 0; i < 40; i++) {
+    expanded[i] = chars[i].charCodeAt(0);
+  }
+
+  const hash = keccak256(expanded);
+  let ret = '';
+
+  for (let i = 0; i < _address.length; i++) {
+    if (parseInt(hash[i], 16) >= 8) {
+      ret += _address[i].toUpperCase();
+    } else {
+      ret += _address[i];
+    }
+  }
+
+  return ret;
 }

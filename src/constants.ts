@@ -1,3 +1,5 @@
+import * as _cometConstants from './comet-artifacts/comet-constants.json';
+
 // Publicly revealed on the parent class
 export const constants = {
 	PriceFeed: "PriceFeed",
@@ -53,6 +55,14 @@ export const constants = {
 	cRBTC: "cRBTC",
 	cBPRO: "cBPRO",
 };
+
+// Move all Comet constants to the parent class
+Object.assign(_constants, _cometConstants.moveToParentClass);
+delete _cometConstants.moveToParentClass;
+
+export const cometConstants = _cometConstants;
+
+export const constants = _constants;
 
 export const address = {
 	mainnet: {
@@ -241,6 +251,24 @@ export const address = {
 		kRBTC: "0x5b35072cd6110606c8421e013304110fa04a32a3",
 	},
 };
+
+// Move all relevant Comet addresses to the address storage
+const cometNetworks = Object.keys(_cometConstants.address);
+cometNetworks.forEach((network) => {
+  const contractNames = Object.keys(_cometConstants.address[network]);
+  contractNames.forEach((contract) => {
+    if (!address[network]) {
+      address[network] = {};
+    }
+
+    const value = _cometConstants.address[network][contract];
+    if (typeof value === 'string') {
+      address[network][contract] = value;
+    } else if (typeof value === 'object' && value.contract && typeof value.contract === 'string') {
+      address[network][contract] = value.contract;
+    }
+  });
+});
 
 export const abi = {
 	Erc20: [

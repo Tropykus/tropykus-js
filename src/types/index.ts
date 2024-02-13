@@ -16,6 +16,11 @@ export interface CompoundInstance {
   _networkPromise: Promise<ProviderNetwork>;
 }
 
+export interface CometInstance {
+  _networkPromise: Promise<ProviderNetwork>;
+  _invalidProvider?: boolean | string;
+}
+
 export interface CompoundOptions {
   privateKey?: string;
   mnemonic?: string;
@@ -125,59 +130,6 @@ export interface Provider extends AbstractSigner, FallbackProvider {
 }
 
 
-// =-=-=-=-=-= /src/api.ts =-=-=-=-=-=
-
-export interface APIResponse {
-  error?: string;
-  responseCode?: number;
-  responseMessage?: string;
-}
-
-export interface precise {
-  value: string;
-}
-
-export interface AccountServiceRequest {
-  addresses?: string[] | string;
-  min_borrow_value_in_eth?: precise;
-  max_health?: precise;
-  block_number?: number;
-  block_timestamp?: number;
-  page_size?: number;
-  page_number?: number;
-  network?: string;
-}
-
-export interface CTokenServiceRequest {
-  addresses?: string[] | string;
-  block_number?: number;
-  block_timestamp?: number;
-  meta?: boolean;
-  network?: string;
-}
-
-export interface MarketHistoryServiceRequest {
-  asset?: string;
-  min_block_timestamp?: number;
-  max_block_timestamp?: number;
-  num_buckets?: number;
-  network?: string;
-}
-
-
-export interface GovernanceServiceRequest {
-  proposal_ids?: number[];
-  state?: string;
-  with_detail?: boolean;
-  page_size?: number;
-  page_number?: number;
-  network?: string;
-}
-
-export type APIRequest = AccountServiceRequest |
-  CTokenServiceRequest | MarketHistoryServiceRequest | GovernanceServiceRequest;
-
-
 // =-=-=-=-=-= /src/EIP712.ts =-=-=-=-=-=
 
 export interface Signature {
@@ -193,6 +145,7 @@ export interface EIP712Type {
 
 export interface EIP712Domain {
   name: string;
+  version?: string;
   chainId: number;
   verifyingContract: string;
 }
@@ -207,7 +160,12 @@ export interface DelegateTypes {
   Delegation: EIP712Type[];
 }
 
-export type EIP712Types = VoteTypes | DelegateTypes;
+export interface AllowTypes {
+  EIP712Domain: EIP712Type[];
+  Authorization: EIP712Type[];
+}
+
+export type EIP712Types = VoteTypes | DelegateTypes | AllowTypes;
 
 export interface DelegateSignatureMessage {
   delegatee: string;
@@ -220,7 +178,15 @@ export interface VoteSignatureMessage {
   support: number;
 }
 
-export type EIP712Message = DelegateSignatureMessage | VoteSignatureMessage;
+export interface AllowSignatureMessage {
+  owner: string;
+  manager: string;
+  isAllowed: boolean;
+  nonce: number;
+  expiry: number;
+}
+
+export type EIP712Message = DelegateSignatureMessage | VoteSignatureMessage | AllowSignatureMessage;
 
 interface SimpleEthersProvider {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -231,4 +197,18 @@ export interface SimpleEthersSigner {
   _signingKey();
   getAddress();
   provider?: SimpleEthersProvider;
+}
+
+
+// =-=-=-=-=-= /src/comet.ts =-=-=-=-=-=
+
+export interface AssetInfo {
+  offset: number;
+  asset: string;
+  priceFeed: string;
+  scale: BigNumber;
+  borrowCollateralFactor: BigNumber;
+  liquidateCollateralFactor: BigNumber;
+  liquidationFactor: BigNumber;
+  supplyCap: BigNumber;
 }

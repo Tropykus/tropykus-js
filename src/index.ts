@@ -12,7 +12,6 @@ import * as cToken from "./cToken";
 import * as priceFeed from "./priceFeed";
 import * as comp from "./comp";
 import * as gov from "./gov";
-import * as api from "./api";
 import { constants, decimals } from "./constants";
 import { Provider, CompoundOptions, CompoundInstance } from "./types";
 
@@ -27,6 +26,7 @@ ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR);
  * @param {object} [options] Optional provider options.
  *
  * @example
+ *
  * ```
  * var tropykus = new Tropykus(window.ethereum); // web browser
  *
@@ -45,6 +45,18 @@ ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR);
  * var tropykus = new Tropykus('https://public-node.rsk.co' {
  *   mnemonic: 'clutch captain shoe...', // preferably with environment variable
  * });
+ * ```
+ *
+ * Compound III (Comet) Object Initialization. This accepts the same parameters
+ *     as the `Compound` constructor. An error will be thrown initially and
+ *     whenever a method is called if the provider does not match the network of
+ *     the specific Comet deployment. The SDK constants as well as a method in
+ *     the Comet documentation note the Comet deployments that Compound.js
+ *     supports.
+ *
+ * ```
+ * var compound = new Compound(window.ethereum);
+ * var comet = compound.comet.MAINNET_USDC(); // provider from `compound` will be used unless on is explicitly passed
  * ```
  *
  * @returns {object} Returns an instance of the Tropykus.js SDK.
@@ -85,7 +97,6 @@ const Tropykus = function (
 };
 
 Tropykus.eth = eth;
-Tropykus.api = api;
 Tropykus.util = util;
 Tropykus._ethers = ethers;
 Tropykus.decimals = decimals;

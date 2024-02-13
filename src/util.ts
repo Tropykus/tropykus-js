@@ -196,7 +196,8 @@ export function getAbi(contract: string): AbiType[] {
 }
 
 /**
- * Gets the name of an Ethereum network based on its chain ID.
+ * Gets the name of an Ethereum network based on its chain ID. This method
+ *     returns information only for chains that have a Compound deployment.
  *
  * @param {string} chainId The chain ID of the network.
  *
@@ -204,7 +205,7 @@ export function getAbi(contract: string): AbiType[] {
  *
  * @example
  * ```
- * console.log('Ropsten : ', Compound.util.getNetNameWithChainId(3));
+ * console.log('Goerli : ', Compound.util.getNetNameWithChainId(5));
  * ```
  */
 export function getNetNameWithChainId(chainId: number): string {
