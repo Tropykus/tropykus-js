@@ -122,25 +122,14 @@ var tropykus = new Tropykus('https://public-node.rsk.co' {
 });
 ```
 
-### Comet
-
-Compound III (Comet) object initialization. The constructor accepts the same parameters as the `Compound` constructor. An error will be thrown initially and whenever a method is called if the provider does not match the network of the specific Comet deployment. The SDK constants as well as a method in the Comet documentation note the Comet deployments that Compound.js supports.
-
-```js
-var compound = new Compound(window.ethereum);
-var comet = compound.comet.MAINNET_USDC(); // provider from `compound` will be used unless on is explicitly passed
-```
-
 ## Constants and Contract Addresses
 
 Names of contracts, their addresses, ABIs, token decimals, and more can be found in `/src/constants.ts`. Addresses, for all networks, can be easily fetched using the `getAddress` function, combined with contract name constants.
 
 ```js
-console.log(Tropykus.DAI, Tropykus.ETH, Tropykus.cETH);
-// DAI, ETH, cETH
+console.log(Tropykus.DOC, Tropykus.BPRO, Tropykus.kRBTC);
 
-const cUsdtAddress = Tropykus.util.getAddress(Tropykus.cUSDT);
-// Mainnet cUSDT address. Second parameter can be a network like 'ropsten'.
+const kDOC = Tropykus.util.getAddress(Tropykus.kDOC);
 ```
 
 ## Mantissas
@@ -149,10 +138,10 @@ Parameters of number values can be plain numbers or their scaled up mantissa val
 
 ```js
 // 1 Dai
-await tropykus.borrow(Tropykus.DAI, "1000000000000000000", { mantissa: true });
+await tropykus.borrow(Tropykus.DOC, "1000000000000000000", { mantissa: true });
 
 // `mantissa` defaults to false if it is not specified or if an options object is not passed
-await tropykus.borrow(Tropykus.DAI, 1, { mantissa: false });
+await tropykus.borrow(Tropykus.DOC, 1, { mantissa: false });
 ```
 
 ## Transaction Options
