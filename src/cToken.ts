@@ -175,7 +175,7 @@ export async function supply(
 
 		if (notEnough) {
 			// ERC-20 approve transaction
-			return await eth.trx(
+			await eth.trx(
 				underlyingAddress,
 				"approve",
 				[cTokenAddress, amount],
@@ -536,7 +536,7 @@ export async function repayBorrow(
 
 		if (notEnough) {
 			// ERC-20 approve transaction
-			return await eth.trx(
+			await eth.trx(
 				underlyingAddress,
 				"approve",
 				[cTokenAddress, approvalValue],
