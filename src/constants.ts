@@ -215,8 +215,6 @@ export const address = {
 	rsk_mainnet: {
 		//TODO: Check this addresses
 		PriceFeed: "0xb90c96607b45f9bB7509861A1CE77Cb8a72EdFB2",
-		Maximillion: "0x8f4abdBA752aa40F6BeEaD5d3ba2b648c7B4606B",
-		CompoundLens: "0xEF11D1eff9C559B47B921dFFfF1e3A147e84E283",
 		Comptroller: "0x962308fEf8edFaDD705384840e7701F8f39eD0c0",
 		// RSK TOKENS
 		DOC: "0xe700691da7b9851f2f35f8b8182c69c53ccad9db",
@@ -224,12 +222,13 @@ export const address = {
 		cDOC: "0x544eb90e766b405134b3b3f62b6b4c23fcd5fda2",
 		cBPRO: "0x405062731d8656af5950ef952be9fa110878036b",
 		cRBTC: "0x0aeadb9d4c6a80462a47e87e76e487fa8b9a37d7",
+		kDOC: "0x544eb90e766b405134b3b3f62b6b4c23fcd5fda2",
+		kBPRO: "0x405062731d8656af5950ef952be9fa110878036b",
+		kRBTC: "0x0aeadb9d4c6a80462a47e87e76e487fa8b9a37d7",
 	},
 	rsk_testnet: {
 		//TODO: Check this addresses
 		PriceFeed: "0xb90c96607b45f9bB7509861A1CE77Cb8a72EdFB2",
-		Maximillion: "0x8f4abdBA752aa40F6BeEaD5d3ba2b648c7B4606B",
-		CompoundLens: "0xEF11D1eff9C559B47B921dFFfF1e3A147e84E283",
 		Comptroller: "0xb1bec5376929b4e0235f1353819dba92c4b0c6bb",
 		// RSK TOKENS
 		DOC: "0xcb46c0ddc60d18efeb0e586c17af6ea36452dae0",
@@ -237,6 +236,9 @@ export const address = {
 		cDOC: "0x71e6b108d823c2786f8ef63a3e0589576b4f3914",
 		cBPRO: "0x844a99Ba756539Aee698ce2915d678bA0FeE4d9d",
 		cRBTC: "0x5b35072cd6110606c8421e013304110fa04a32a3",
+		kDOC: "0x71e6b108d823c2786f8ef63a3e0589576b4f3914",
+		kBPRO: "0x844a99Ba756539Aee698ce2915d678bA0FeE4d9d",
+		kRBTC: "0x5b35072cd6110606c8421e013304110fa04a32a3",
 	},
 };
 
@@ -4973,6 +4975,9 @@ export const cTokens = [
 	"cDOC",
 	"cRBTC",
 	"cBPRO",
+	"kDOC",
+	"kRBTC",
+	"kBPRO",
 ];
 
 export const underlyings = [

@@ -446,7 +446,6 @@ export async function borrow(
  * ```
  */
 
-//TODO: FIX REPAYALL
 export async function repayBorrow(
 	asset: string,
 	amount: string | number | BigNumber,
