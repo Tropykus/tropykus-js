@@ -6,6 +6,110 @@ A JavaScript SDK for Ethereum and the Tropykus Protocol. Wraps around [Ethers.js
 
 This SDK is in **open beta**, and is constantly under development. **USE AT YOUR OWN RISK**.
 
+## Install / Import
+
+Web Browser
+
+```html
+<script
+	type="text/javascript"
+	src="https://cdn.jsdelivr.net/npm/@compound-finance/compound-js@latest/dist/browser/compound.min.js"
+></script>
+
+<script type="text/javascript">
+	window.Tropykus; // or `Tropykus`
+</script>
+```
+
+Node.js
+
+```
+npm install @tropykus/tropykus-js
+```
+
+```js
+const Tropykus = require("@tropykus/tropykus-js");
+
+// or, when using ES6
+
+import Tropykus from "@tropykus/tropykus-js";
+```
+
+## Instance Creation
+
+If you are accessing with an injected provider such as Metamask, ensure that you are connected the the Rootstock Mainnet (or Rootstock Testnet) network
+
+```js
+const tropykus = new Tropykus(window.ethereum); // web browser
+
+const tropykus = new Tropykus('http://127.0.0.1:8545'); // HTTP provider
+
+const tropykus = new Tropykus(); // Uses Ethers.js fallback mainnet (for testing only)
+
+const tropykus = new Tropykus('https://public-node.testnet.rsk.co'); // Uses Ethers.js fallback (for testing only)
+
+// Init with private key (server side)
+const tropykus = new Tropykus('https://public-node.rsk.co', {
+  privateKey: '0x_your_private_key_', // preferably with environment variable
+});
+
+// Init with HD mnemonic (server side)
+const tropykus = new Tropykus('https://public-node.rsk.co' {
+  mnemonic: 'clutch captain shoe...', // preferably with environment variable
+});
+```
+
+## Tropykus Protocol
+
+The SDK provides some simple methods to interact with the protocol.
+
+**Important:** It is critical to set the gasLimit option on each transaction to ensure the exeuction of the method
+
+The accepted assets to interact with the protocol are: RBTC, DOC and BPRO
+
+```js
+const tropykus = new Tropykus(window.ethereum); // in a web browser
+
+// Ethers.js overrides are an optional 3rd parameter for `supply`
+// const trxOptions = { gasLimit: 250000, mantissa: false };
+
+// Supply
+(async function () {
+	console.log("Supplying RBTC to the Tropykus protocol...");
+	const trx = await tropykus.supply(Tropykus.RBTC, 1, {
+		gasLimit: 250000
+	});
+	console.log("Ethers.js transaction object", trx);
+})().catch(console.error);
+
+// Borrow
+(async function () {
+	console.log("Borriwng DOC from the Tropykus protocol...");
+	const trx = await tropykus.borrow(Tropykus.DOC, 1, {
+		gasLimit: 650000
+	});
+	console.log("Ethers.js transaction object", trx);
+})().catch(console.error);
+
+// Redeem
+(async function () {
+	console.log("Redeeming RBTC from the Tropykus protocol...");
+	const trx = await tropykus.redeem(Tropykus.RBTC, 1, {
+		gasLimit: 450000
+	});
+	console.log("Ethers.js transaction object", trx);
+})().catch(console.error);
+
+// RepayBorrow
+(async function () {
+	console.log("Repaying a loan in DOC from the Tropykus protocol...");
+	const trx = await tropykus.repayBorrow(Tropykus.RBTC, 1, 0xMyAddress, {
+		gasLimit: 450000
+	});
+	console.log("Ethers.js transaction object", trx);
+})().catch(console.error);
+```
+
 ## Ethereum Read & Write
 
 JSON RPC based Ethereum **read** and **write**.
@@ -48,79 +152,9 @@ const toAddress = "0xa0df350d2637096571F7A701CBc1C5fdE30dF76A";
 })().catch(console.error);
 ```
 
-## Tropykus Protocol
-
-Simple methods for using the Tropykus protocol.
-
-```js
-const tropykus = new Tropykus(window.ethereum); // in a web browser
-
-// Ethers.js overrides are an optional 3rd parameter for `supply`
-// const trxOptions = { gasLimit: 250000, mantissa: false };
-
-(async function () {
-	console.log("Supplying RBTC to the Tropykus protocol...");
-	const trx = await tropykus.supply(Tropykus.RBTC, 1);
-	console.log("Ethers.js transaction object", trx);
-})().catch(console.error);
-```
-
-## Install / Import
-
-Web Browser
-
-```html
-<script
-	type="text/javascript"
-	src="https://cdn.jsdelivr.net/npm/@compound-finance/compound-js@latest/dist/browser/compound.min.js"
-></script>
-
-<script type="text/javascript">
-	window.Tropykus; // or `Tropykus`
-</script>
-```
-
-Node.js
-
-```
-npm install @tropykus/tropykus-js
-```
-
-```js
-const Tropykus = require("@tropykus/tropykus-js");
-
-// or, when using ES6
-
-import Tropykus from "@tropykus/tropykus-js";
-```
-
 ## More Code Examples
 
 See the docblock comments above each function definition or the official [Tropykus.js Documentation](https://compound.finance/docs/compound-js).
-
-## Instance Creation
-
-The following are valid Ethereum providers for initialization of the SDK (v2 and Comet instance).
-
-```js
-var tropykus = new Tropykus(window.ethereum); // web browser
-
-var tropykus = new Tropykus('http://127.0.0.1:8545'); // HTTP provider
-
-var tropykus = new Tropykus(); // Uses Ethers.js fallback mainnet (for testing only)
-
-var tropykus = new Tropykus('https://public-node.testnet.rsk.co'); // Uses Ethers.js fallback (for testing only)
-
-// Init with private key (server side)
-var tropykus = new Tropykus('https://public-node.rsk.co', {
-  privateKey: '0x_your_private_key_', // preferably with environment variable
-});
-
-// Init with HD mnemonic (server side)
-var tropykus = new Tropykus('https://public-node.rsk.co' {
-  mnemonic: 'clutch captain shoe...', // preferably with environment variable
-});
-```
 
 ## Constants and Contract Addresses
 
