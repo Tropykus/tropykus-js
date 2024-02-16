@@ -1,6 +1,5 @@
-// import axios from "axios";
-
-const endpoint = () => {
+const endpoint = (chainId: number) => {
+	if (chainId === 31) return "https://graphql1.testnet.tropykus.com";
 	return "https://graphql1.tropykus.com";
 };
 
@@ -42,7 +41,8 @@ type FindManyUser_balancesType = {
  * @returns A Promise that resolves to the first user matching the provided address, or null if no user is found.
  */
 const getUserId = async (
-	user_address: string
+	user_address: string,
+	chainId: number
 ): Promise<FindFirstUsersType | null> => {
 	const query = `
 	query FindFirstUsers($where: UsersWhereInput) {
@@ -72,7 +72,7 @@ const getUserId = async (
 	};
 
 	try {
-		const response = await fetch(endpoint(), options);
+		const response = await fetch(endpoint(chainId), options);
 		return await response.json();
 	} catch (error) {
 		console.error("Error fetching user balance", error);
@@ -86,9 +86,10 @@ const getUserId = async (
  * @returns A promise that resolves to an object containing the user's balance data, or null if the user is not found. The balance data includes the user's deposits, borrows, and interest for each market.
  */
 export const getUserBalance = async (
-	user_address: string
+	user_address: string,
+	chainId: number
 ): Promise<FindManyUser_balancesType | null> => {
-	const userIdResponse = await getUserId(user_address);
+	const userIdResponse = await getUserId(user_address, chainId);
 	if (!userIdResponse) throw new Error("User not found");
 	const userId = userIdResponse.data.findFirstUsers.id;
 
@@ -131,7 +132,7 @@ export const getUserBalance = async (
 	};
 
 	try {
-		const response = await fetch(endpoint(), options);
+		const response = await fetch(endpoint(chainId), options);
 		const userData = await response.json();
 		const marketsBalance = userData.data.findManyUser_balances;
 		const marketsBalanceFiltered = marketsBalance.filter(

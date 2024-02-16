@@ -209,7 +209,8 @@ In order to fetch to balance of a user simply call:
 
 ```js
 const userAddress = "0x123....";
-const userBalance = await tropykus.getUserBalance(userAddress);
+const chainId = 30; // 30 for RSK Mainnet, 31 for testnet
+const userBalance = await tropykus.getUserBalance(userAddress, chainId);
 ```
 
 The response will include the information on the borrows, deposits, and the interest accrued both for deposits and for borrows
