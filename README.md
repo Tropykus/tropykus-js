@@ -13,7 +13,7 @@ Web Browser
 ```html
 <script
 	type="text/javascript"
-	src="https://cdn.jsdelivr.net/npm/@compound-finance/compound-js@latest/dist/browser/compound.min.js"
+	src="https://cdn.jsdelivr.net/npm/@tropykus/tropykus-js@latest/dist/browser/tropykus.min.js"
 ></script>
 
 <script type="text/javascript">
@@ -163,7 +163,11 @@ Names of contracts, their addresses, ABIs, token decimals, and more can be found
 ```js
 console.log(Tropykus.DOC, Tropykus.BPRO, Tropykus.kRBTC);
 
+// To get the token address for RSK mainnet
 const kDOC = Tropykus.util.getAddress(Tropykus.kDOC);
+
+// To get the token address for RSK testnet
+const kBPRO = Tropykus.util.getAddress(Tropykus.kBPRO, "rsk_testnet");
 ```
 
 ## Mantissas
@@ -215,14 +219,14 @@ const userBalance = await tropykus.getUserBalance(userAddress, chainId);
 
 ### Response Schema
 
-```JSON
+```ts
 {
-	"data": {
-		"borrows": number,
-		"deposits": number,
-		"borrowInterest": number,
-		"depositsInterest": number,
-		"market": string
+	data: {
+		borrows: number,
+		deposits: number,
+		borrowInterest: number,
+		depositsInterest: number,
+		market: string
 	}
 }
 ```

@@ -52,6 +52,9 @@ export const constants = {
 	cDOC: "cDOC",
 	cRBTC: "cRBTC",
 	cBPRO: "cBPRO",
+	kDOC: "kDOC",
+	kRBTC: "kRBTC",
+	kBPRO: "kBPRO",
 };
 
 export const address = {
