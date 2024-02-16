@@ -213,7 +213,19 @@ const chainId = 30; // 30 for RSK Mainnet, 31 for testnet
 const userBalance = await tropykus.getUserBalance(userAddress, chainId);
 ```
 
-The response will include the information on the borrows, deposits, and the interest accrued both for deposits and for borrows
+### Response Schema
+
+```JSON
+{
+	"data": {
+		"borrows": number,
+		"deposits": number,
+		"borrowInterest": number,
+		"depositsInterest": number,
+		"market": string
+	}
+}
+```
 
 **IMPORTANT**: In order to access the API, the URL has to be whitelisted. Please contact the Tropykus team at contact@tropykus.com to whitelist your URL.
 
