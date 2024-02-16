@@ -13,7 +13,7 @@ Web Browser
 ```html
 <script
 	type="text/javascript"
-	src="https://cdn.jsdelivr.net/npm/@compound-finance/compound-js@latest/dist/browser/compound.min.js"
+	src="https://cdn.jsdelivr.net/npm/@tropykus/tropykus-js@latest/dist/browser/tropykus.min.js"
 ></script>
 
 <script type="text/javascript">
@@ -163,7 +163,11 @@ Names of contracts, their addresses, ABIs, token decimals, and more can be found
 ```js
 console.log(Tropykus.DOC, Tropykus.BPRO, Tropykus.kRBTC);
 
+// To get the token address for RSK mainnet
 const kDOC = Tropykus.util.getAddress(Tropykus.kDOC);
+
+// To get the token address for RSK testnet
+const kBPRO = Tropykus.util.getAddress(Tropykus.kBPRO, "rsk_testnet");
 ```
 
 ## Mantissas
@@ -203,7 +207,31 @@ const trxOptions = {
 
 ## API
 
-TODO: UPDATE
+The Tropykus API was integrated in the product in order to easily fetch the data and perform calculations on a user balance. The main methor is `getUserBalance`
+
+In order to fetch to balance of a user simply call:
+
+```js
+const userAddress = "0x123....";
+const chainId = 30; // 30 for RSK Mainnet, 31 for testnet
+const userBalance = await tropykus.getUserBalance(userAddress, chainId);
+```
+
+### Response Schema
+
+```ts
+{
+	data: {
+		borrows: number,
+		deposits: number,
+		borrowInterest: number,
+		depositsInterest: number,
+		market: string
+	}
+}
+```
+
+**IMPORTANT**: In order to access the API, the URL has to be whitelisted. Please contact the Tropykus team at contact@tropykus.com to whitelist your URL.
 
 ## Test
 

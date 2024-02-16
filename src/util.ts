@@ -174,7 +174,7 @@ export function request(options: any): Promise<any> {
  * console.log('cETH Address: ', Compound.util.getAddress(Compound.cETH));
  * ```
  */
-export function getAddress(contract: string, network = "mainnet"): string {
+export function getAddress(contract: string, network = "rsk_mainnet"): string {
 	return address[network][contract];
 }
 
