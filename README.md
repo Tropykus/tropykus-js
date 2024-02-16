@@ -203,7 +203,16 @@ const trxOptions = {
 
 ## API
 
-TODO: UPDATE
+The Tropykus API was integrated in the product in order to easily fetch the data and perform calculations on a user balance. The main methor is `getUserBalance`
+
+In order to fetch to balance of a user simply call:
+
+```js
+const userAddress = "0x123....";
+const userBalance = await tropykus.getUserBalance(userAddress);
+```
+
+The response will include the information on the borrows, deposits, and the interest accrued both for deposits and for borrows
 
 ## Test
 
