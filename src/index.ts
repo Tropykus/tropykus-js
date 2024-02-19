@@ -10,8 +10,7 @@ import * as util from "./util";
 import * as comptroller from "./comptroller";
 import * as cToken from "./cToken";
 import * as priceFeed from "./priceFeed";
-import * as comp from "./comp";
-import * as gov from "./gov";
+import * as api from "./api";
 import { constants, decimals } from "./constants";
 import { Provider, CompoundOptions, CompoundInstance } from "./types";
 
@@ -77,11 +76,7 @@ const Tropykus = function (
 		...comptroller,
 		...cToken,
 		...priceFeed,
-		...gov,
-		claimComp: comp.claimComp,
-		delegate: comp.delegate,
-		delegateBySig: comp.delegateBySig,
-		createDelegateSignature: comp.createDelegateSignature,
+		...api,
 	};
 
 	// Instance needs to know which network the provider connects to, so it can
@@ -100,10 +95,6 @@ Tropykus.eth = eth;
 Tropykus.util = util;
 Tropykus._ethers = ethers;
 Tropykus.decimals = decimals;
-Tropykus.comp = {
-	getCompBalance: comp.getCompBalance,
-	getCompAccrued: comp.getCompAccrued,
-};
 Object.assign(Tropykus, constants);
 
 export = Tropykus;
