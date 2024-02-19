@@ -1,6 +1,6 @@
 {
 	"name": "@tropykus/tropykus-js",
-	"version": "0.4.5",
+	"version": "0.0.2",
 	"author": "Tropykus Finance",
 	"description": "A JavaScript SDK for RSK and the Tropykus Protocol.",
 	"license": "BSD-3-Clause",
@@ -70,8 +70,5 @@
 	},
 	"peerDependencies": {
 		"ethers": "5.x"
-	},
-	"dependencies": {
-		"axios": "^1.6.7"
 	}
 }
