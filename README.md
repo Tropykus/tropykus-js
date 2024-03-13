@@ -123,8 +123,16 @@ const amount = 1; // It can also be a string... const amount = "1"
 
 // Supply of DOC or BPRO
 (async function () {
-	console.log("Supplying RBTC to the Tropykus protocol...");
+	console.log("Supplying DOC to the Tropykus protocol...");
 	const trx = await tropykus.supply(Tropykus.DOC, amount, {
+		gasLimit: 450000
+	});
+	console.log("Ethers.js transaction object", trx);
+})().catch(console.error);
+
+(async function () {
+	console.log("Supplying BPRO to the Tropykus protocol...");
+	const trx = await tropykus.supply(Tropykus.BPRO, amount, {
 		gasLimit: 450000
 	});
 	console.log("Ethers.js transaction object", trx);
