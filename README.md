@@ -111,12 +111,21 @@ const tropykus = new Tropykus(window.ethereum); // in a web browser
 // const trxOptions = { gasLimit: 250000, mantissa: false };
 
 const amount = 1; // It can also be a string... const amount = "1"
-
-// Supply
+ 
+// Supply of RBTC
 (async function () {
 	console.log("Supplying RBTC to the Tropykus protocol...");
 	const trx = await tropykus.supply(Tropykus.RBTC, amount, {
 		gasLimit: 250000
+	});
+	console.log("Ethers.js transaction object", trx);
+})().catch(console.error);
+
+// Supply of DOC or BPRO
+(async function () {
+	console.log("Supplying RBTC to the Tropykus protocol...");
+	const trx = await tropykus.supply(Tropykus.DOC, amount, {
+		gasLimit: 450000
 	});
 	console.log("Ethers.js transaction object", trx);
 })().catch(console.error);
