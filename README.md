@@ -209,16 +209,16 @@ const markets = await tropykus.getMarkets(chainId);
 ```ts
 {
 	data: {
-		id: number;
-		name: string;
-		contract_address: string;
-		is_listed: boolean;
-		borrow_rate: string;
-		total_borrows: string;
-		total_supply: string;
-		underlying_token_price: string;
-		underlying_token_address: string;
-		supply_rate: string;
+		id: number,
+		name: string,
+		contract_address: string,
+		is_listed: boolean,
+		borrow_rate: string,
+		total_borrows: string,
+		total_supply: string,
+		underlying_token_price: string,
+		underlying_token_address: string,
+		supply_rate: string
 	}
 }
 ```
