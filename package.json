@@ -1,6 +1,6 @@
 {
 	"name": "@tropykus/tropykus-js",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"author": "Tropykus Finance",
 	"description": "A JavaScript SDK for RSK and the Tropykus Protocol.",
 	"license": "BSD-3-Clause",
