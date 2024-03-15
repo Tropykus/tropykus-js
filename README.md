@@ -168,7 +168,9 @@ const amount = 1; // It can also be a string... const amount = "1"
 
 ## API
 
-The Tropykus API was integrated in the product in order to easily fetch the data and perform calculations on a user balance. The main methor is `getUserBalance`
+### Get User Balance
+
+The Tropykus API was integrated in the product in order to easily fetch the data and perform calculations on a user balance. The main method is `getUserBalance`
 
 In order to fetch to balance of a user simply call:
 
@@ -188,6 +190,35 @@ const userBalance = await tropykus.getUserBalance(userAddress, chainId);
 		borrowInterest: number,
 		depositsInterest: number,
 		market: string
+	}
+}
+
+```
+
+### Get Markets
+
+In order to fetch the markets information call `getMarkets()`
+
+```js
+const chainId = 30; // 30 for RSK Mainnet, 31 for testnet
+const markets = await tropykus.getMarkets(chainId);
+```
+
+### Response Schema
+
+```ts
+{
+	data: {
+		id: number;
+		name: string;
+		contract_address: string;
+		is_listed: boolean;
+		borrow_rate: string;
+		total_borrows: string;
+		total_supply: string;
+		underlying_token_price: string;
+		underlying_token_address: string;
+		supply_rate: string;
 	}
 }
 ```

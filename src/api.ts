@@ -35,6 +35,23 @@ type FindManyUser_balancesType = {
 	};
 };
 
+type FindManyMarketsType = {
+	data: {
+		findManyMarkets: {
+			id: number;
+			name: string;
+			contract_address: string;
+			is_listed: boolean;
+			borrow_rate: string;
+			total_borrows: string;
+			total_supply: string;
+			underlying_token_price: string;
+			underlying_token_address: string;
+			supply_rate: string;
+		}[];
+	};
+};
+
 /**
  * Retrieves the user ID for a given user address.
  * @param user_address The user address to search for.
@@ -153,3 +170,53 @@ export const getUserBalance = async (
 		return null;
 	}
 };
+
+/**
+ * Retrieves a list of markets from the server.
+ * @param chainId - The ID of the chain to fetch the markets from.
+ * @returns A promise that resolves to the list of markets, or null if an error occurs.
+ */
+export const getMarkets = async (chainId: number): Promise<FindManyMarketsType | null> => {
+	const query = `
+	query getMarkets($where: MarketsWhereInput) {
+	findManyMarkets(where: $where) {
+		id
+		name
+		borrow_rate
+		total_borrows
+		total_supply
+		underlying_token_price
+		underlying_token_address
+		contract_address
+		supply_rate
+		}
+	}`;
+
+	const variables = {
+		where: {
+			is_listed: {
+				equals: true,
+			},
+		},
+	};	
+
+	const graphqlQuery = {
+		operationName: "getMarkets",
+		query,
+		variables
+	};
+
+	const options = {
+		method: "POST",
+		headers,
+		body: JSON.stringify(graphqlQuery),
+	};
+
+	try {
+		const response = await fetch(endpoint(chainId), options);
+		return await response.json();
+	} catch (error) {
+		console.error("Error fetching markets", error);
+		return null;
+	}
+}
