@@ -2,7 +2,7 @@
 
 A JavaScript SDK for Ethereum and the Tropykus Protocol. Wraps around [Ethers.js](https://github.com/ethers-io/ethers.js/). Works in the **web browser** and **Node.js**.
 
-[Tropykus.js Documentation](https://compound.finance/docs/compound-js)
+[Tropykus.js Documentation](https://tropykus.gitbook.io/tropykus-protocol)
 
 This SDK is in **open beta**, and is constantly under development. **USE AT YOUR OWN RISK**.
 
