@@ -106,6 +106,7 @@ export const address = {
 		DOC: "0x0000000000085d4780B73119b644AE5ecd22b376",
 		RBTC: "0x0000000000085d4780B73119b644AE5ecd22b376",
 		BPRO: "0x0000000000085d4780B73119b644AE5ecd22b376",
+		USDRIF: "0x0000000000085d4780B73119b644AE5ecd22b376",
 	},
 	rinkeby: {
 		PriceFeed: "0x5722A3F60fa4F0EC5120DCD6C386289A4758D1b2",
@@ -222,12 +223,15 @@ export const address = {
 		// RSK TOKENS
 		DOC: "0xe700691da7b9851f2f35f8b8182c69c53ccad9db",
 		BPRO: "0x440cd83c160de5c96ddb20246815ea44c7abbca8",
+		USDRIF: "0x3a15461d8ae0f0fb5fa2629e9da7d66a794a6e37",
 		cDOC: "0x544eb90e766b405134b3b3f62b6b4c23fcd5fda2",
 		cBPRO: "0x405062731d8656af5950ef952be9fa110878036b",
 		cRBTC: "0x0aeadb9d4c6a80462a47e87e76e487fa8b9a37d7",
+		cUSDRIF: "0xDdf3CE45fcf080DF61ee61dac5Ddefef7ED4F46C",
 		kDOC: "0x544eb90e766b405134b3b3f62b6b4c23fcd5fda2",
 		kBPRO: "0x405062731d8656af5950ef952be9fa110878036b",
 		kRBTC: "0x0aeadb9d4c6a80462a47e87e76e487fa8b9a37d7",
+		kUSDRIF: "0xDdf3CE45fcf080DF61ee61dac5Ddefef7ED4F46C",
 	},
 	rsk_testnet: {
 		//TODO: Check this addresses
@@ -236,12 +240,15 @@ export const address = {
 		// RSK TOKENS
 		DOC: "0xcb46c0ddc60d18efeb0e586c17af6ea36452dae0",
 		BPRO: "0x4da7997a819bb46b6758b9102234c289dd2ad3bf",
+		USDRIF: "0x8dbF326E12a9fF37ED6ddf75adA548c2640a6482",
 		cDOC: "0x71e6b108d823c2786f8ef63a3e0589576b4f3914",
 		cBPRO: "0x844a99Ba756539Aee698ce2915d678bA0FeE4d9d",
 		cRBTC: "0x5b35072cd6110606c8421e013304110fa04a32a3",
+		cUSDRIF: "0xfbee4444493194468df1de7450a37d840eb8b555",
 		kDOC: "0x71e6b108d823c2786f8ef63a3e0589576b4f3914",
 		kBPRO: "0x844a99Ba756539Aee698ce2915d678bA0FeE4d9d",
 		kRBTC: "0x5b35072cd6110606c8421e013304110fa04a32a3",
+		kUSDRIF: "0xfbee4444493194468df1de7450a37d840eb8b555",
 	},
 };
 
@@ -268,9 +275,11 @@ export const cTokens = [
 	"cDOC",
 	"cRBTC",
 	"cBPRO",
+	"cUSDRIF",
 	"kDOC",
 	"kRBTC",
 	"kBPRO",
+	"kUSDRIF",
 ];
 
 export const underlyings = [
@@ -296,6 +305,7 @@ export const underlyings = [
 	"DOC",
 	"RBTC",
 	"BPRO",
+	"USDRIF",
 ];
 
 // additional assets supported by the open price feed
@@ -344,6 +354,7 @@ export const decimals = {
 	DOC: 18,
 	RBTC: 18,
 	BPRO: 18,
+	USDRIF: 18
 };
 
 // TODO: Show a specific error code when a transaction fails
