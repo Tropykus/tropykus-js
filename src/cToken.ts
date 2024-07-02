@@ -175,12 +175,13 @@ export async function supply(
 
 		if (notEnough) {
 			// ERC-20 approve transaction
-			await eth.trx(
+			const approveTx = await eth.trx(
 				underlyingAddress,
 				"approve",
 				[cTokenAddress, amount],
 				options
 			);
+			await approveTx.wait();
 		}
 	}
 
@@ -536,12 +537,13 @@ export async function repayBorrow(
 
 		if (notEnough) {
 			// ERC-20 approve transaction
-			await eth.trx(
+			const approvalTx = await eth.trx(
 				underlyingAddress,
 				"approve",
 				[cTokenAddress, approvalValue],
 				trxOptions
 			);
+			approvalTx.wait();
 		}
 	}
 
